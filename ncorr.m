@@ -661,11 +661,26 @@ classdef ncorr < handle
                                     try               
                                         % Do reference image first
                                         [ref_prelim,outstate_ref] = ncorr_util_loadsavedimg(struct_load.reference_save);
-                                        
+                                         % In the case load is not
+                                        % succesful, the following 'if'
+                                        % condition search for the images
+                                        % in the location loaded .mat file
+                                        if (outstate_ref ~= out.success)
+                                            struct_load.reference_save.path=pathname;
+                                            [ref_prelim,outstate_ref] = ncorr_util_loadsavedimg(struct_load.reference_save);
+                                        end
                                         % Do current images next
                                         cur_prelim = ncorr_class_img.empty;
                                         for i = 0:length(struct_load.current_save)-1
                                             [cur_buffer,outstate_cur] = ncorr_util_loadsavedimg(struct_load.current_save(i+1));
+                                            % In the case load is not
+                                            % succesful, the following if
+                                            % condition search for the images
+                                            % in the location loaded .mat file
+                                            if (outstate_cur ~= out.success)
+                                                struct_load.current_save(i+1).path=pathname;
+                                                [cur_buffer,outstate_cur] = ncorr_util_loadsavedimg(struct_load.current_save(i+1));
+                                            end  
                                             if (outstate_cur == out.success)
                                                 cur_prelim(i+1) = cur_buffer;
                                             else
