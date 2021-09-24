@@ -806,9 +806,15 @@ function handles_gui = ncorr_gui_viewplots(reference,current,data_dic,type_plot,
             img_reduced = img_bg.reduce(data_dic.dispinfo.spacing);
             
             % Set Background Image
-            imshow(img_reduced.get_img(),[img_reduced.min_gs img_reduced.max_gs],'Parent',handles_gui_sub.axes_formatplot);
+            %imshow(img_reduced.get_img(),[img_reduced.min_gs img_reduced.max_gs],'Parent',handles_gui_sub.axes_formatplot);
+            %hold(handles_gui_sub.axes_formatplot,'on');
+            %The following lines use the high quality img_bg instead of img_reduced. Thus the quality of background images is better for publication.
+            Convert_height=[.5 floor(img_bg.height/(data_dic.dispinfo.spacing+1))+1.5];
+            Convert_width=[.5 floor(img_bg.width/(data_dic.dispinfo.spacing+1))+1.5];
+            
+            imshow(img_bg.get_img(),[img_bg.min_gs img_bg.max_gs],'Parent',handles_gui_sub.axes_formatplot,'XData', Convert_width, 'YData', Convert_height);
             hold(handles_gui_sub.axes_formatplot,'on');
-                        
+            
             % Overlay plot - See if it's a contour plot
             if (val_checkbox_contour)
                 % Format plot
